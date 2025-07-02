@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Mondrian</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background-color: #f0f0f0; margin: 0; }
+        h1 { margin: 1rem; }
+        canvas { background-color: #fff; border: 2px solid #000; }
+        button { font-size: 1rem; padding: 0.5rem 1rem; margin: 1rem; }
+    </style>
+</head>
+<body>
+    <h1>Generative Mondrian</h1>
+    <canvas id="mondrianCanvas" width="600" height="600"></canvas>
+    <br>
+    <button id="generateBtn">Generate</button>
+    <button id="saveBtn">Save</button>
+
+    <script>
+        const canvas = document.getElementById('mondrianCanvas');
+        const ctx = canvas.getContext('2d');
+        const generateBtn = document.getElementById('generateBtn');
+        const saveBtn = document.getElementById('saveBtn');
+
+        const dpi = window.devicePixelRatio || 1;
+        canvas.width = 600 * dpi;
+        canvas.height = 600 * dpi;
+        canvas.style.width = '600px';
+        canvas.style.height = '600px';
+        ctx.scale(dpi, dpi);
+
+        const colors = ['#D40920', '#1255A2', '#F7D842', '#F0F0F0']; // Red, Blue, Yellow, White
+        const minSize = 50;
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            split(0, 0, 600, 600, 0);
+        }
+
+        function split(x, y, w, h, depth) {
+            if ((w < minSize || h < minSize || Math.random() < 0.2) && depth > 1) {
+                drawRectangle(x, y, w, h);
+                return;
+            }
+
+            if (w > h) {
+                const splitX = w * (Math.random() * 0.6 + 0.2); // Split between 20% and 80%
+                split(x, y, splitX, h, depth + 1);
+                split(x + splitX, y, w - splitX, h, depth + 1);
+            } else {
+                const splitY = h * (Math.random() * 0.6 + 0.2);
+                split(x, y, w, splitY, depth + 1);
+                split(x, y + splitY, w, h - splitY, depth + 1);
+            }
+        }
+
+        function drawRectangle(x, y, w, h) {
+            // Fill
+            ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+            ctx.fillRect(x, y, w, h);
+
+            // Border
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(x, y, w, h);
+        }
+
+        generateBtn.addEventListener('click', draw);
+        saveBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'mondrian.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+        draw(); // Initial drawing
+
+    </script>
+
+</body>
+</html>
