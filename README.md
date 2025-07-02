@@ -1,6 +1,6 @@
 # Generative Mondrian
 
-A simple web app that creates random Mondrian-style art using HTML Canvas.
+A simple web app that creates random Mondrian-style art using HTML Canvas. Try it here: https://cute-sunflower-b8d468.netlify.app/
 
 ![Screenshot](screenshot.png)
 
